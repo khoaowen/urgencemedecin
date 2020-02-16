@@ -55,7 +55,11 @@ public class ExcelReader {
 		int rowIndex = 1;
 		Cell cellValue;
 		while ((cellValue = sheet.getRow(rowIndex).getCell(columnIndex)) != null) {
-			result.add(dataFormatter.formatCellValue(cellValue));
+			String formatCellValue = dataFormatter.formatCellValue(cellValue).trim();
+			if (formatCellValue.isEmpty()) {
+				break;
+			}
+			result.add(formatCellValue);
 			rowIndex++;
 		}
 		return result;
