@@ -1,6 +1,9 @@
 package urgence_medecin.importer;
 
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -19,23 +22,24 @@ public class App {
 
 	private static final String SAMPLE_XLSX_FILE_PATH = "BDD.xlsx";
 	private static final List<Long> postIds = LongStream.rangeClosed(6550, 43291).boxed().collect(Collectors.toList());
-	private static final long firstMetaId = 394404;
+	private static final long firstMetaId = 625812;
 
 	public static void main(String[] args) throws EncryptedDocumentException, InvalidFormatException, IOException {
 		final ExcelReader reader = new ExcelReader(SAMPLE_XLSX_FILE_PATH);
-		List<String> variablesToRead = IntStream.rangeClosed(1, 6).mapToObj(i -> "phrase" + i)
+		List<String> variablesToRead = IntStream.rangeClosed(1, 46).mapToObj(i -> "variable" + i)
 				.collect(Collectors.toList());
 		Long metaId = firstMetaId;
 		StringBuilder bd = new StringBuilder();
 		for (String var : variablesToRead) {
-			List<String> valuesOfHeader = reader.getValuesOfHeader("Ville Accroche", var);
+			List<String> valuesOfHeader = reader.getValuesOfHeader("Ville ALL", var);
 			MetaDatasUpdater updater = new MetaDatasUpdater(postIds, metaId, var, valuesOfHeader);
 			Pair<String, Long> generateStatements = updater.generateStatements();
 			bd.append(generateStatements.getKey());
 			metaId = generateStatements.getValue();
 		}
-
-		System.out.println(bd.toString());
+		try (BufferedWriter writer = Files.newBufferedWriter(new File("sqlResult.txt").toPath())) {
+			writer.write(bd.toString());
+		}
 		reader.close();
 	}
 }
