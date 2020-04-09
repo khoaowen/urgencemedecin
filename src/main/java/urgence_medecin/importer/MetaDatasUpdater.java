@@ -39,32 +39,20 @@ insert into wpp9_postmeta values(	391361	,6521	,"variable5"	,"proche de l'endroi
  */
 public class MetaDatasUpdater {
 
-	/**
-	 * List of POST objects to be updated
-	 */
-	private final List<Long> postIds;
-	/**
-	 * The first meta ID to be incremented
-	 */
-	private final Long firstMetaId;
-	/**
-	 * The variable meta key
-	 */
-	private final String metaKey;
-	/**
-	 * The list of all possible values for the variable metakey
-	 * {@link MetaDatasUpdater#metaKey}
-	 */
-	private final List<String> metaValues;
-
-	public MetaDatasUpdater(List<Long> postIds, Long firstMetaId, String metaKey, List<String> metaValues) {
-		this.postIds = postIds;
-		this.firstMetaId = firstMetaId;
-		this.metaKey = metaKey;
-		this.metaValues = metaValues;
+	private MetaDatasUpdater() {
 	}
 
-	public Pair<String, Long> generateStatements() {
+	/**
+	 * Insert new lines to database
+	 * 
+	 * @param firstMetaId The first meta ID to be incremented
+	 * @param metaKey     The variable meta key
+	 * @param postIds     List of POST objects to be updated
+	 * @param metaValues  The list of all possible values for the variable metakey
+	 * @return
+	 */
+	public static Pair<String, Long> insertStatements(Long firstMetaId, String metaKey, List<Long> postIds,
+			List<String> metaValues) {
 		StringBuilder bd = new StringBuilder();
 		int innerLoopSize = postIds.size() / metaValues.size();
 		Long incrementMetaId = firstMetaId;
@@ -76,20 +64,15 @@ public class MetaDatasUpdater {
 		return new Pair<String, Long>(bd.toString(), incrementMetaId);
 	}
 
-	public List<Long> getPostIds() {
-		return postIds;
-	}
-
-	public Long getFirstMetaId() {
-		return firstMetaId;
-	}
-
-	public String getMetaKey() {
-		return metaKey;
-	}
-
-	public List<String> getMetaValues() {
-		return metaValues;
+	public static String updateStatements(String variable, List<Long> postIds, List<String> valuesOfHeader) {
+		StringBuilder bd = new StringBuilder();
+		int innerLoopSize = postIds.size() / valuesOfHeader.size();
+		for (int i = 0; i < postIds.size(); i++) {
+			bd.append(String.format(
+					"update wpp9_postmeta set meta_value = \"%s\" where post_id=%d and meta_key=\"%s\";\n",
+					valuesOfHeader.get(i % valuesOfHeader.size()), postIds.get(i), variable));
+		}
+		return bd.toString();
 	}
 
 }

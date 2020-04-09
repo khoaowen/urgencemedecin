@@ -1,27 +1,26 @@
-package urgence_medecin.importer;
+package urgence_medecin.importer.insert;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import javafx.util.Pair;
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import urgence_medecin.importer.AppTestSuite;
+import urgence_medecin.importer.ExcelReader;
+import urgence_medecin.importer.MetaDatasUpdater;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest extends TestCase {
-	private static final String SAMPLE_XLSX_FILE_PATH = "BDD.xlsx";
+public class TestInsert {
 	private final List<Long> postIds = Arrays.asList(6454l, 6455L, 6456L, 6457L, 6459L, 6460L, 6461L, 6462L, 6463L,
 			6464L, 6465L, 6521L, 6466L, 6467L, 6468L, 6469L, 6470L, 6471L, 6472L, 6473L, 6475L, 6476L, 6477L, 6533L,
 			6478L, 6479L, 6480L, 6545L, 6481L, 6482L, 6483L, 6484L, 6486L, 6487L, 6522L, 6474L, 6485L, 6497L, 6506L,
@@ -31,37 +30,23 @@ public class AppTest extends TestCase {
 			6535L, 6536L, 6544L, 6549L, 6548L, 6537L, 6538L, 6539L, 6540L, 6542L, 6543L, 6532L);
 	private final long firstMetaId = 391350l;
 
-	/**
-	 * Create the test case
-	 *
-	 * @param testName name of the test case
-	 */
-	public AppTest(String testName) {
-		super(testName);
+	private static final String SAMPLE_XLSX_FILE_PATH = "BDD.xlsx";
+
+	public static ExcelReader reader;
+
+	@BeforeClass
+	public static void readFile() throws EncryptedDocumentException, InvalidFormatException, IOException {
+		reader = new ExcelReader(SAMPLE_XLSX_FILE_PATH);
 	}
 
-	/**
-	 * @return the suite of tests being tested
-	 */
-	public static Test suite() {
-		return new TestSuite(AppTest.class);
+	@AfterClass
+	public static void closeFile() {
+		reader.close();
 	}
 
-	private String readLineByLine(String filePath) throws URISyntaxException {
-		StringBuilder contentBuilder = new StringBuilder();
-
-		try (Stream<String> stream = Files.lines(Paths.get(getClass().getClassLoader().getResource(filePath).toURI()),
-				StandardCharsets.UTF_8)) {
-			stream.forEach(s -> contentBuilder.append(s).append("\n"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		return contentBuilder.toString();
-	}
-
+	@Test
 	public void testReadLineByLine() throws URISyntaxException {
-		assertFalse(readLineByLine("sqlStatements").isEmpty());
+		Assert.assertFalse(AppTestSuite.readLineByLine("insert/sqlStatements").isEmpty());
 	}
 
 	/**
@@ -70,17 +55,16 @@ public class AppTest extends TestCase {
 	 * @throws InvalidFormatException // * @throws EncryptedDocumentException
 	 * @throws URISyntaxException
 	 */
-	public void testImportExcelFIleVariable5()
-			throws EncryptedDocumentException, InvalidFormatException, IOException, URISyntaxException {
+	@Test
+	public void testImportExcelFIleVariable5() throws URISyntaxException {
 		// Creating a Workbook from an Excel file (.xls or .xlsx)
-		final ExcelReader reader = new ExcelReader(SAMPLE_XLSX_FILE_PATH);
+
 		final String variable5 = "variable5";
 		final List<String> valuesOfHeader = reader.getValuesOfHeader("Département Suite", variable5);
-		assertEquals(valuesOfHeader.size(), 14);
+		Assert.assertEquals(valuesOfHeader.size(), 14);
 
-		MetaDatasUpdater updater = new MetaDatasUpdater(postIds, firstMetaId, variable5, valuesOfHeader);
-		assertEquals(readLineByLine("sqlStatements"), updater.generateStatements().getKey());
-		reader.close();
+		Assert.assertEquals(AppTestSuite.readLineByLine("insert/sqlStatements"),
+				MetaDatasUpdater.insertStatements(firstMetaId, variable5, postIds, valuesOfHeader).getKey());
 
 	}
 
@@ -90,18 +74,15 @@ public class AppTest extends TestCase {
 	 * @throws InvalidFormatException // * @throws EncryptedDocumentException
 	 * @throws URISyntaxException
 	 */
-	public void testImportExcelFIleVariable7()
-			throws EncryptedDocumentException, InvalidFormatException, IOException, URISyntaxException {
+	@Test
+	public void testImportExcelFIleVariable7() throws URISyntaxException {
 		// Creating a Workbook from an Excel file (.xls or .xlsx)
-		final ExcelReader reader = new ExcelReader(SAMPLE_XLSX_FILE_PATH);
 		final String variable7 = "variable7";
 		List<String> valuesOfHeader = reader.getValuesOfHeader("Département Suite", variable7);
-		assertEquals(valuesOfHeader.size(), 7);
+		Assert.assertEquals(valuesOfHeader.size(), 7);
 
-		MetaDatasUpdater updater = new MetaDatasUpdater(postIds, firstMetaId, variable7, valuesOfHeader);
-		assertEquals(readLineByLine("sqlStatements2"), updater.generateStatements().getKey());
-		reader.close();
-
+		Assert.assertEquals(AppTestSuite.readLineByLine("insert/sqlStatements2"),
+				MetaDatasUpdater.insertStatements(firstMetaId, variable7, postIds, valuesOfHeader).getKey());
 	}
 
 	/**
@@ -110,23 +91,22 @@ public class AppTest extends TestCase {
 	 * @throws InvalidFormatException // * @throws EncryptedDocumentException
 	 * @throws URISyntaxException
 	 */
+	@Test
 	public void testImportExcelFIleMerged()
 			throws EncryptedDocumentException, InvalidFormatException, IOException, URISyntaxException {
 		// Creating a Workbook from an Excel file (.xls or .xlsx)
-		final ExcelReader reader = new ExcelReader(SAMPLE_XLSX_FILE_PATH);
 		List<String> variablesToRead = Arrays.asList("variable5", "variable7");
 		Long metaId = firstMetaId;
 		StringBuilder bd = new StringBuilder();
 		for (String var : variablesToRead) {
 			List<String> valuesOfHeader = reader.getValuesOfHeader("Département Suite", var);
-			MetaDatasUpdater updater = new MetaDatasUpdater(postIds, metaId, var, valuesOfHeader);
-			Pair<String, Long> generateStatements = updater.generateStatements();
+			Pair<String, Long> generateStatements = MetaDatasUpdater.insertStatements(metaId, var, postIds,
+					valuesOfHeader);
 			bd.append(generateStatements.getKey());
 			metaId = generateStatements.getValue();
 		}
 
-		assertEquals(readLineByLine("sqlStatementsMerged"), bd.toString());
-		reader.close();
+		Assert.assertEquals(AppTestSuite.readLineByLine("insert/sqlStatementsMerged"), bd.toString());
 
 	}
 }

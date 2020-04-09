@@ -32,8 +32,8 @@ public class App {
 		StringBuilder bd = new StringBuilder();
 		for (String var : variablesToRead) {
 			List<String> valuesOfHeader = reader.getValuesOfHeader("Ville ALL", var);
-			MetaDatasUpdater updater = new MetaDatasUpdater(postIds, metaId, var, valuesOfHeader);
-			Pair<String, Long> generateStatements = updater.generateStatements();
+			Pair<String, Long> generateStatements = MetaDatasUpdater.insertStatements(metaId, var, postIds,
+					valuesOfHeader);
 			bd.append(generateStatements.getKey());
 			metaId = generateStatements.getValue();
 		}
