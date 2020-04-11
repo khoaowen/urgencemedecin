@@ -1,5 +1,6 @@
 package urgence_medecin.importer;
 
+import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  * @author khoa
  *
  */
-public class ExcelReader {
+public class ExcelReader implements Closeable {
 
 	private final String filePath;
 	private final Workbook workbook;
