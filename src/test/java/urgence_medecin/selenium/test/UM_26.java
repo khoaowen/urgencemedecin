@@ -10,11 +10,14 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.map.HashedMap;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.Test;
 
 import com.google.common.base.Functions;
 
+import urgence_medecin.selenium.page.Annuaire;
 import urgence_medecin.selenium.page.Departement;
+import urgence_medecin.selenium.page.Region;
 import urgence_medecin.selenium.page.Ville;
 
 public class UM_26 extends AbstractTest {
@@ -128,18 +131,17 @@ public class UM_26 extends AbstractTest {
 		}
 		webDriver.get(departementUrl);
 		final Departement departement = Departement.getPage();
-		webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> departement.getHyperLinksOfMedecinParVilles());
-		List<String> hrefLinks = departement.getHyperLinksOfMedecinParVilles().stream().map(e -> e.getAttribute("href"))
-				.collect(Collectors.toList());
+		webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> departement.getMedecinParVillesHref());
 
 		List<String> villeDescriptions = new ArrayList<>();
 
-		for (String villeLink : hrefLinks) {
+		for (String villeLink : departement.getMedecinParVillesHref()) {
 			// go to each ville and collect its description
+			// need to be in departement page to get the correct link
 			webDriver.get(villeLink);
 			final Ville ville = Ville.getPage();
 			webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> ville.getDescriptionElement());
-			villeDescriptions.add(ville.getDescriptionElement().getText());
+			villeDescriptions.add(ville.getDescriptionElement());
 		}
 		allVillesPrincipalesDescriptionCache.put(departementUrl, villeDescriptions);
 		return villeDescriptions;
@@ -162,99 +164,26 @@ public class UM_26 extends AbstractTest {
 	}
 
 	@Test
-	public void test_villes_principales_phrase1_doivent_etre_differentes_pour_ain() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_AIN_URL, phrase1Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
+	public void test_villes_principales_phrase1_doivent_etre_differentes_pour_tous_departements() {
+		Annuaire annuaire = Annuaire.getPage();
+		webDriver.get("https://www.urgence-medecin-garde.fr/annuaire/");
+		webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> annuaire.getRegionsHref());
+		List<String> regions = annuaire.getRegionsHref();
+		Region region = Region.getPage();
+		SoftAssertions softly = new SoftAssertions();
+		for (String r : regions) {
+			webDriver.get(r);
+			webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> region.getDepartementsHref());
+			List<String> departements = region.getDepartementsHref();
+			for (String dep : departements) {
+				List<Integer> counter = getCounterOfEachVariable(dep, phrase1Variables);
+				softly.assertThat(counter).as("Phrase1 pour " + dep)
+						.allSatisfy(value -> assertThat(value).isLessThan(4));
+				counter = getCounterOfEachVariable(dep, phrase2Variables);
+				softly.assertThat(counter).as("Phrase2 pour " + dep)
+						.allSatisfy(value -> assertThat(value).isLessThan(4));
+			}
+		}
+		softly.assertAll();
 	}
-
-	@Test
-	public void test_villes_principales_phrase2_doivent_etre_differentes_pour_ain() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_AIN_URL, phrase2Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase1_doivent_etre_differentes_pour_allier() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_ALLIER_URL, phrase1Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase2_doivent_etre_differentes_pour_allier() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_ALLIER_URL, phrase2Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase1_doivent_etre_differentes_pour_cantal() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_CANTAL_URL, phrase1Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase2_doivent_etre_differentes_pour_cantal() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_CANTAL_URL, phrase2Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase1_doivent_etre_differentes_pour_drome() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_DROME_URL, phrase1Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase2_doivent_etre_differentes_pour_drome() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_DROME_URL, phrase2Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase1_doivent_etre_differentes_pour_haute_loire() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_HAUTE_LOIRE_URL, phrase1Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase2_doivent_etre_differentes_pour_haute_loire() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_HAUTE_LOIRE_URL, phrase2Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase1_doivent_etre_differentes_pour_haute_savoie() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_HAUTE_SAVOIE_URL, phrase1Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase2_doivent_etre_differentes_pour_haute_savoie() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_HAUTE_SAVOIE_URL, phrase2Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase1_doivent_etre_differentes_pour_isere() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_ISERE_URL, phrase1Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase2_doivent_etre_differentes_pour_isere() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_ISERE_URL, phrase2Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase1_doivent_etre_differentes_pour_loire() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_LOIRE_URL, phrase1Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
-	@Test
-	public void test_villes_principales_phrase2_doivent_etre_differentes_pour_loire() {
-		List<Integer> counter = getCounterOfEachVariable(DEPARTEMENT_LOIRE_URL, phrase2Variables);
-		assertThat(counter).allSatisfy(value -> assertThat(value).isLessThan(3).isGreaterThan(0));
-	}
-
 }

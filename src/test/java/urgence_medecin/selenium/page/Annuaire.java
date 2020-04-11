@@ -8,20 +8,18 @@ import org.openqa.selenium.WebDriver;
 
 import urgence_medecin.selenium.driver.DriverManager;
 
-public class Departement {
+public class Annuaire {
 
-	private Departement() {
-
+	private Annuaire() {
 	}
 
-	public static Departement getPage() {
-		return new Departement();
+	public static Annuaire getPage() {
+		return new Annuaire();
 	}
 
-	public List<String> getMedecinParVillesHref() {
+	public List<String> getRegionsHref() {
 		WebDriver chromeDriver = DriverManager.getChromeDriver();
-		return chromeDriver.findElements(By.xpath("//div[contains(@class,'et_pb_text_13')]//td/a")).stream()
+		return chromeDriver.findElements(By.xpath("//div[contains(@class,'col-1-3')]//a")).stream()
 				.map(e -> e.getAttribute("href")).collect(Collectors.toList());
 	}
-
 }
