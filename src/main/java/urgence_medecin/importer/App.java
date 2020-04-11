@@ -14,10 +14,6 @@ import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 
 import javafx.util.Pair;
 
-/**
- * Hello world!
- *
- */
 public class App {
 
 	private static final String SAMPLE_XLSX_FILE_PATH = "BDD.xlsx";
