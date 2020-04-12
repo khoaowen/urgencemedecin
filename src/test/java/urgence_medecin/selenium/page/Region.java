@@ -27,4 +27,13 @@ public class Region {
 		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute("href"))
 				.collect(Collectors.toList());
 	}
+
+	public String getDepartementAriegeText() {
+		WebDriver chromeDriver = DriverManager.getChromeDriver();
+		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
+		String xpathExpression = "//div[contains(@class,'et_pb_text_9')]//td/a";
+		webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> d.findElements(By.xpath(xpathExpression)));
+		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute("innerText"))
+				.filter(e -> e.contains("Ariège")).findAny().get();
+	}
 }

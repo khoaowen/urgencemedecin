@@ -124,7 +124,7 @@ public class UM_26 {
 		final Departement departement = Departement.getPage();
 		List<String> villeDescriptions = new ArrayList<>();
 
-		for (String villeLink : departement.getMedecinParVillesHref()) {
+		for (String villeLink : departement.getMedecinParVillesHyperLink("href")) {
 			// go to each ville and collect its description
 			// need to be in departement page to get the correct link
 			SeleniumTestSuite.getWebDriver().get(villeLink);

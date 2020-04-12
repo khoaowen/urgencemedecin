@@ -20,15 +20,33 @@ public class Departement {
 		return new Departement();
 	}
 
-	WebDriver chromeDriver = DriverManager.getChromeDriver();
+	public String getMedecinDeGardeDepartementTitle() {
+		WebDriver chromeDriver = DriverManager.getChromeDriver();
+		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
+		String xpathExpression = "//div[contains(@class,\"et_pb_row_inner_0\")]//h1";
+		webDriverWait.withTimeout(Duration.ofSeconds(10))
+				.until(d -> chromeDriver.findElements(By.xpath(xpathExpression)));
+		return chromeDriver.findElement(By.xpath(xpathExpression)).getAttribute("innerText");
+	}
 
-	public List<String> getMedecinParVillesHref() {
+	public List<String> getMedecinParVillesHyperLink(String attribute) {
+		WebDriver chromeDriver = DriverManager.getChromeDriver();
 		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
 		String xpathExpression = "//div[contains(@class,'et_pb_text_13')]//td/a";
 		webDriverWait.withTimeout(Duration.ofSeconds(10))
 				.until(d -> chromeDriver.findElements(By.xpath(xpathExpression)));
-		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute("href"))
+		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute(attribute))
 				.collect(Collectors.toList());
+	}
+
+	public String getVilleSaintEtienneText() {
+		WebDriver chromeDriver = DriverManager.getChromeDriver();
+		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
+		String xpathExpression = "//div[contains(@class,'et_pb_text_13')]//td/a";
+		webDriverWait.withTimeout(Duration.ofSeconds(10))
+				.until(d -> chromeDriver.findElements(By.xpath(xpathExpression)));
+		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute("innerText"))
+				.filter(e -> e.contains("SAINT-ETIENNE")).findAny().get();
 	}
 
 }
