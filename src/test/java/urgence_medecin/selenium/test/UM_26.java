@@ -14,7 +14,7 @@ import org.junit.Test;
 
 import com.google.common.base.Functions;
 
-import urgence_medecin.selenium.SeleniumTestSuite;
+import urgence_medecin.selenium.TestSuiteSelenium;
 import urgence_medecin.selenium.page.Annuaire;
 import urgence_medecin.selenium.page.Departement;
 import urgence_medecin.selenium.page.Region;
@@ -120,14 +120,14 @@ public class UM_26 {
 		if (allVillesPrincipalesDescriptionCache.containsKey(departementUrl)) {
 			return allVillesPrincipalesDescriptionCache.get(departementUrl);
 		}
-		SeleniumTestSuite.getWebDriver().get(departementUrl);
+		TestSuiteSelenium.getWebDriver().get(departementUrl);
 		final Departement departement = Departement.getPage();
 		List<String> villeDescriptions = new ArrayList<>();
 
 		for (String villeLink : departement.getMedecinParVillesHyperLink("href")) {
 			// go to each ville and collect its description
 			// need to be in departement page to get the correct link
-			SeleniumTestSuite.getWebDriver().get(villeLink);
+			TestSuiteSelenium.getWebDriver().get(villeLink);
 			final Ville ville = Ville.getPage();
 			villeDescriptions.add(ville.getDescriptionElement());
 		}
@@ -154,12 +154,12 @@ public class UM_26 {
 	@Test
 	public void test_villes_principales_phrases_variables_doivent_etre_differentes_pour_tous_departements() {
 		Annuaire annuaire = Annuaire.getPage();
-		SeleniumTestSuite.getWebDriver().get("https://www.urgence-medecin-garde.fr/annuaire/");
+		TestSuiteSelenium.getWebDriver().get("https://www.urgence-medecin-garde.fr/annuaire/");
 		List<String> regions = annuaire.getRegionsHref();
 		Region region = Region.getPage();
 		SoftAssertions softly = new SoftAssertions();
 		for (String r : regions) {
-			SeleniumTestSuite.getWebDriver().get(r);
+			TestSuiteSelenium.getWebDriver().get(r);
 			List<String> departements = region.getDepartementsHref();
 			for (String dep : departements) {
 				List<Integer> counter = getCounterOfEachVariable(dep, phrase1Variables);

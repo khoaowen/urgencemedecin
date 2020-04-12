@@ -4,29 +4,29 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
-import urgence_medecin.selenium.SeleniumTestSuite;
+import urgence_medecin.selenium.TestSuiteSelenium;
 
 public class UM_4 {
 
 	@Test
 	public void test_supprimer_les_pages_get_ville() {
-		SeleniumTestSuite.getWebDriver()
+		TestSuiteSelenium.getWebDriver()
 				.get("https://www.urgence-medecin-garde.fr/get-region/get-departement/get-ville/");
-		assertThat(SeleniumTestSuite.getWebDriver().getCurrentUrl())
-				.isEqualTo("https://www.urgence-medecin-garde.fr/annuaire");
+		assertThat(TestSuiteSelenium.getWebDriver().getCurrentUrl())
+				.contains("https://www.urgence-medecin-garde.fr/annuaire");
 	}
 
 	@Test
 	public void test_supprimer_les_pages_get_departement() {
-		SeleniumTestSuite.getWebDriver().get("https://www.urgence-medecin-garde.fr/get-region/get-departement/");
-		assertThat(SeleniumTestSuite.getWebDriver().getCurrentUrl())
-				.isEqualTo("https://www.urgence-medecin-garde.fr/annuaire");
+		TestSuiteSelenium.getWebDriver().get("https://www.urgence-medecin-garde.fr/get-region/get-departement/");
+		assertThat(TestSuiteSelenium.getWebDriver().getCurrentUrl())
+				.contains("https://www.urgence-medecin-garde.fr/annuaire");
 	}
 
 	@Test
 	public void test_supprimer_les_pages_get_region() {
-		SeleniumTestSuite.getWebDriver().get("https://www.urgence-medecin-garde.fr/get-region/");
-		assertThat(SeleniumTestSuite.getWebDriver().getCurrentUrl())
-				.isEqualTo("https://www.urgence-medecin-garde.fr/annuaire");
+		TestSuiteSelenium.getWebDriver().get("https://www.urgence-medecin-garde.fr/get-region/");
+		assertThat(TestSuiteSelenium.getWebDriver().getCurrentUrl())
+				.contains("https://www.urgence-medecin-garde.fr/annuaire");
 	}
 }

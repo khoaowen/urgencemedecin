@@ -4,14 +4,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.junit.Test;
 
-import urgence_medecin.selenium.SeleniumTestSuite;
+import urgence_medecin.selenium.TestSuiteSelenium;
 import urgence_medecin.selenium.page.Departement;
 
 public class UM_32 {
 
 	@Test
 	public void test_departements_de_la_region_filtres() {
-		SeleniumTestSuite.getWebDriver().get("https://www.urgence-medecin-garde.fr/grand-est/meuse-55/");
+		TestSuiteSelenium.getWebDriver().get("https://www.urgence-medecin-garde.fr/grand-est/meuse-55/");
 		Departement departement = Departement.getPage();
 		assertThat(departement.getDepartementsDeLaRegion("href")).allMatch(e -> e.contains("grand-est"));
 	}
