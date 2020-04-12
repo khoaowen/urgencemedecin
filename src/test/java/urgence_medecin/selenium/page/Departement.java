@@ -49,4 +49,14 @@ public class Departement {
 				.filter(e -> e.contains("SAINT-ETIENNE")).findAny().get();
 	}
 
+	public List<String> getDepartementsDeLaRegion(String attribute) {
+		WebDriver chromeDriver = DriverManager.getChromeDriver();
+		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
+		String xpathExpression = "(//ul[@class=\"special-list\"])[2]//a";
+		webDriverWait.withTimeout(Duration.ofSeconds(10))
+				.until(d -> chromeDriver.findElements(By.xpath(xpathExpression)));
+		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute(attribute))
+				.collect(Collectors.toList());
+	}
+
 }

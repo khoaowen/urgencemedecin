@@ -152,7 +152,7 @@ public class UM_26 {
 	}
 
 	@Test
-	public void test_villes_principales_phrase1_doivent_etre_differentes_pour_tous_departements() {
+	public void test_villes_principales_phrases_variables_doivent_etre_differentes_pour_tous_departements() {
 		Annuaire annuaire = Annuaire.getPage();
 		SeleniumTestSuite.getWebDriver().get("https://www.urgence-medecin-garde.fr/annuaire/");
 		List<String> regions = annuaire.getRegionsHref();
