@@ -2,7 +2,6 @@ package urgence_medecin.selenium.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -15,21 +14,13 @@ import org.junit.Test;
 
 import com.google.common.base.Functions;
 
+import urgence_medecin.selenium.SeleniumTestSuite;
 import urgence_medecin.selenium.page.Annuaire;
 import urgence_medecin.selenium.page.Departement;
 import urgence_medecin.selenium.page.Region;
 import urgence_medecin.selenium.page.Ville;
 
-public class UM_26 extends AbstractTest {
-
-	private static final String DEPARTEMENT_AIN_URL = "https://www.urgence-medecin-garde.fr/auvergne-rhone-alpes/ain-01";
-	private static final String DEPARTEMENT_ALLIER_URL = "https://www.urgence-medecin-garde.fr/auvergne-rhone-alpes/allier-03/";
-	private static final String DEPARTEMENT_CANTAL_URL = "https://www.urgence-medecin-garde.fr/auvergne-rhone-alpes/cantal-15/";
-	private static final String DEPARTEMENT_DROME_URL = "https://www.urgence-medecin-garde.fr/auvergne-rhone-alpes/drome-26/";
-	private static final String DEPARTEMENT_HAUTE_LOIRE_URL = "https://www.urgence-medecin-garde.fr/auvergne-rhone-alpes/haute-loire-43/";
-	private static final String DEPARTEMENT_HAUTE_SAVOIE_URL = "https://www.urgence-medecin-garde.fr/auvergne-rhone-alpes/haute-savoie-74/";
-	private static final String DEPARTEMENT_ISERE_URL = "https://www.urgence-medecin-garde.fr/auvergne-rhone-alpes/isere-38/";
-	private static final String DEPARTEMENT_LOIRE_URL = "https://www.urgence-medecin-garde.fr/auvergne-rhone-alpes/loire-42/";
+public class UM_26 {
 
 	// @formatter:off
 	private final List<String> phrase1Variables = Arrays.asList(
@@ -129,18 +120,15 @@ public class UM_26 extends AbstractTest {
 		if (allVillesPrincipalesDescriptionCache.containsKey(departementUrl)) {
 			return allVillesPrincipalesDescriptionCache.get(departementUrl);
 		}
-		webDriver.get(departementUrl);
+		SeleniumTestSuite.getWebDriver().get(departementUrl);
 		final Departement departement = Departement.getPage();
-		webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> departement.getMedecinParVillesHref());
-
 		List<String> villeDescriptions = new ArrayList<>();
 
 		for (String villeLink : departement.getMedecinParVillesHref()) {
 			// go to each ville and collect its description
 			// need to be in departement page to get the correct link
-			webDriver.get(villeLink);
+			SeleniumTestSuite.getWebDriver().get(villeLink);
 			final Ville ville = Ville.getPage();
-			webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> ville.getDescriptionElement());
 			villeDescriptions.add(ville.getDescriptionElement());
 		}
 		allVillesPrincipalesDescriptionCache.put(departementUrl, villeDescriptions);
@@ -166,14 +154,12 @@ public class UM_26 extends AbstractTest {
 	@Test
 	public void test_villes_principales_phrase1_doivent_etre_differentes_pour_tous_departements() {
 		Annuaire annuaire = Annuaire.getPage();
-		webDriver.get("https://www.urgence-medecin-garde.fr/annuaire/");
-		webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> annuaire.getRegionsHref());
+		SeleniumTestSuite.getWebDriver().get("https://www.urgence-medecin-garde.fr/annuaire/");
 		List<String> regions = annuaire.getRegionsHref();
 		Region region = Region.getPage();
 		SoftAssertions softly = new SoftAssertions();
 		for (String r : regions) {
-			webDriver.get(r);
-			webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> region.getDepartementsHref());
+			SeleniumTestSuite.getWebDriver().get(r);
 			List<String> departements = region.getDepartementsHref();
 			for (String dep : departements) {
 				List<Integer> counter = getCounterOfEachVariable(dep, phrase1Variables);
