@@ -32,7 +32,17 @@ public class Departement {
 	public List<String> getMedecinParVillesHyperLink(String attribute) {
 		WebDriver chromeDriver = DriverManager.getChromeDriver();
 		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
-		String xpathExpression = "//div[contains(@class,'et_pb_text_13')]//td/a";
+		String xpathExpression = "//div[contains(@class,'et_pb_text_12')]//td/a";
+		webDriverWait.withTimeout(Duration.ofSeconds(10))
+				.until(d -> chromeDriver.findElements(By.xpath(xpathExpression)));
+		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute(attribute))
+				.collect(Collectors.toList());
+	}
+
+	public List<String> getAllMedecinHyperLinkInDescription(String attribute) {
+		WebDriver chromeDriver = DriverManager.getChromeDriver();
+		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
+		String xpathExpression = "//ul[@class=\"special-list\"]//a";
 		webDriverWait.withTimeout(Duration.ofSeconds(10))
 				.until(d -> chromeDriver.findElements(By.xpath(xpathExpression)));
 		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute(attribute))
@@ -42,7 +52,7 @@ public class Departement {
 	public String getVilleSaintEtienneText() {
 		WebDriver chromeDriver = DriverManager.getChromeDriver();
 		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
-		String xpathExpression = "//div[contains(@class,'et_pb_text_13')]//td/a";
+		String xpathExpression = "//div[contains(@class,'et_pb_text_12')]//td/a";
 		webDriverWait.withTimeout(Duration.ofSeconds(10))
 				.until(d -> chromeDriver.findElements(By.xpath(xpathExpression)));
 		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute("innerText"))
@@ -56,6 +66,16 @@ public class Departement {
 		webDriverWait.withTimeout(Duration.ofSeconds(10))
 				.until(d -> chromeDriver.findElements(By.xpath(xpathExpression)));
 		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute(attribute))
+				.collect(Collectors.toList());
+	}
+
+	public List<String> getVillesPrincipalesATelephoner() {
+		WebDriver chromeDriver = DriverManager.getChromeDriver();
+		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
+		String xpathExpression = "//div[@class=\"et_pb_text_custom_ville\"]//h3[@class=\"custom_text\"]";
+		webDriverWait.withTimeout(Duration.ofSeconds(10))
+				.until(d -> chromeDriver.findElements(By.xpath(xpathExpression)));
+		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute("innerText"))
 				.collect(Collectors.toList());
 	}
 

@@ -13,6 +13,6 @@ public class UM_28 {
 		TestSuiteSelenium.getWebDriver().get(
 				"https://www.urgence-medecin-garde.fr/get-region/get-departement/get-ville/?regionparam=$1&departementparam=$2&codeparam=$3&villeparam=$4&postalparam=$5");
 		assertThat(TestSuiteSelenium.getWebDriver().getCurrentUrl())
-				.isEqualTo("https://www.urgence-medecin-garde.fr/annuaire");
+				.contains("https://www.urgence-medecin-garde.fr/annuaire");
 	}
 }
