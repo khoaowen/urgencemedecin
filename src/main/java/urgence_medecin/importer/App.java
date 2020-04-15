@@ -22,13 +22,13 @@ import javafx.util.Pair;
 
 public class App {
 
-	private static final String SAMPLE_XLSX_FILE_PATH = "BDD.xlsx";
+	private static final String SAMPLE_XLSX_FILE_PATH = "texte_image.xlsx";
 
 	public static void main(String[] args) {
 
 		try (ExcelReader reader = new ExcelReader(SAMPLE_XLSX_FILE_PATH)) {
-//			generateInsertStatements(reader);
-			generateUpdateStatements(reader);
+			generateInsertStatements(reader);
+//			generateUpdateStatements(reader);
 		} catch (EncryptedDocumentException | InvalidFormatException | IOException | URISyntaxException e) {
 			Logger.getLogger(App.class.getName()).log(Level.SEVERE, e.getMessage());
 		}
@@ -41,9 +41,7 @@ public class App {
 	}
 
 	private static void generateUpdateStatements(ExcelReader reader) throws IOException, URISyntaxException {
-		// @formatter:off
 		final List<Long> postIds = parsePostIds("list_of_villes_principales_de_departement.txt");
-		// @formatter:on
 		postIds.sort(Comparator.naturalOrder());
 		final List<String> variablesToRead = LongStream.rangeClosed(1, 46).mapToObj(i -> "variable" + i)
 				.collect(Collectors.toList());
@@ -58,15 +56,16 @@ public class App {
 
 	}
 
-	private static void generateInsertStatements(final ExcelReader reader) throws IOException {
-		final List<Long> postIds = LongStream.rangeClosed(6550, 43291).boxed().collect(Collectors.toList());
-		final long firstMetaId = 625812;
-		List<String> variablesToRead = IntStream.rangeClosed(1, 46).mapToObj(i -> "variable" + i)
+	private static void generateInsertStatements(final ExcelReader reader) throws IOException, URISyntaxException {
+//		final List<Long> postIds = LongStream.rangeClosed(6550, 43291).boxed().collect(Collectors.toList());
+		final List<Long> postIds = parsePostIds("list_of_regions.txt");
+		final long firstMetaId = 2357460;
+		List<String> variablesToRead = IntStream.rangeClosed(1, 5).mapToObj(i -> "variable" + i)
 				.collect(Collectors.toList());
 		Long metaId = firstMetaId;
 		StringBuilder bd = new StringBuilder();
 		for (String var : variablesToRead) {
-			List<String> valuesOfHeader = reader.getValuesOfHeader("Ville ALL", var);
+			List<String> valuesOfHeader = reader.getValuesOfHeader("ALT REGION", var);
 			Pair<String, Long> generateStatements = MetaDatasUpdater.insertStatements(metaId, var, postIds,
 					valuesOfHeader);
 			bd.append(generateStatements.getKey());

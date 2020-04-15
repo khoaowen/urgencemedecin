@@ -66,7 +66,6 @@ public class MetaDatasUpdater {
 
 	public static String updateStatements(String variable, List<Long> postIds, List<String> valuesOfHeader) {
 		StringBuilder bd = new StringBuilder();
-		int innerLoopSize = postIds.size() / valuesOfHeader.size();
 		for (int i = 0; i < postIds.size(); i++) {
 			bd.append(String.format(
 					"update wpp9_postmeta set meta_value = \"%s\" where post_id=%d and meta_key=\"%s\";\n",

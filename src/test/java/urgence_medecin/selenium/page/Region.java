@@ -36,4 +36,12 @@ public class Region {
 		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute("innerText"))
 				.filter(e -> e.contains("Ariège")).findAny().get();
 	}
+
+	public String getAltLogoRegion() {
+		WebDriver chromeDriver = DriverManager.getChromeDriver();
+		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
+		String xpathExpression = "//div[contains(@class,\"et_pb_text_6\")]//img[contains(@class,\"wp-image-696\")]";
+		webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> d.findElements(By.xpath(xpathExpression)));
+		return chromeDriver.findElement(By.xpath(xpathExpression)).getAttribute("alt");
+	}
 }
