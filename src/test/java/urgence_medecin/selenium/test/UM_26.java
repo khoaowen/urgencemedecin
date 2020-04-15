@@ -111,6 +111,21 @@ public class UM_26 {
 			"Découvrez comment trouver facilement",
 			"Découvrez comment récupérer très facilement"
 			);
+	
+	private final List<String> variable46 = Arrays.asList(
+			"qui vous mettront en relation",
+			"qui feront tout pour vous mettre en relation",
+			"qui feront tout leur possible afin de vous mettre en relation",
+			"qui feront le nécéssaire pour vous mettre en relation",
+			"qui feront le maximum afin de vous mettre rapidement en relation",
+			"qui activeront leur réseau afin de vous mettre rapidement en contact",
+			"qui vous mettront en contact",
+			"qui feront tout pour vous mettre en contact",
+			"qui feront vraiment tout leur possible afin de vous mettre en contact",
+			"qui feront le nécéssaire pour vous mettre en contact",
+			"qui feront le maximum afin de vous mettre contact en relation",
+			"qui activeront leur réseau afin de vous mettre en quelques minutes en relation"
+			);
 			
 	// @formatter:on
 
@@ -129,7 +144,7 @@ public class UM_26 {
 			// need to be in departement page to get the correct link
 			TestSuiteSelenium.getWebDriver().get(villeLink);
 			final Ville ville = Ville.getPage();
-			villeDescriptions.add(ville.getDescriptionElement());
+			villeDescriptions.add(ville.getAllDescriptionTextsInPage());
 		}
 		allVillesPrincipalesDescriptionCache.put(departementUrl, villeDescriptions);
 		return villeDescriptions;
@@ -164,10 +179,13 @@ public class UM_26 {
 			for (String dep : departements) {
 				List<Integer> counter = getCounterOfEachVariable(dep, phrase1Variables);
 				softly.assertThat(counter).as("Phrase1 pour " + dep)
-						.allSatisfy(value -> assertThat(value).isLessThan(4));
+						.allSatisfy(value -> assertThat(value).isLessThan(5));
 				counter = getCounterOfEachVariable(dep, phrase2Variables);
 				softly.assertThat(counter).as("Phrase2 pour " + dep)
-						.allSatisfy(value -> assertThat(value).isLessThan(4));
+						.allSatisfy(value -> assertThat(value).isLessThan(3));
+				counter = getCounterOfEachVariable(dep, variable46);
+				softly.assertThat(counter).as("Variable46 pour " + dep)
+						.allSatisfy(value -> assertThat(value).isLessThan(3));
 			}
 		}
 		softly.assertAll();

@@ -5,6 +5,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import urgence_medecin.selenium.driver.DriverManager;
@@ -43,7 +44,11 @@ public class TestSuiteSelenium {
 	@AfterClass
 	public static void tearDown() {
 		webDriver.close();
-		webMobileDriver.close();
+		try {
+			webMobileDriver.close();
+		} catch (WebDriverException e) {
+			// the driver is already close, just ignore
+		}
 	}
 
 	public static WebDriver getWebDriver() {
