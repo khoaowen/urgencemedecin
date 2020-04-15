@@ -55,7 +55,8 @@ public class ExcelReader implements Closeable {
 		}
 		int rowIndex = 1;
 		Cell cellValue;
-		while ((cellValue = sheet.getRow(rowIndex).getCell(columnIndex)) != null) {
+		while ((cellValue = sheet.getRow(rowIndex) == null ? null
+				: sheet.getRow(rowIndex).getCell(columnIndex)) != null) {
 			String formatCellValue = dataFormatter.formatCellValue(cellValue).trim();
 			if (formatCellValue.isEmpty()) {
 				break;
@@ -66,6 +67,7 @@ public class ExcelReader implements Closeable {
 		return result;
 	}
 
+	@Override
 	public void close() {
 		try {
 			workbook.close();
