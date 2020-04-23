@@ -182,10 +182,10 @@ public class UM_26 {
 						.allSatisfy(value -> assertThat(value).isLessThan(5));
 				counter = getCounterOfEachVariable(dep, phrase2Variables);
 				softly.assertThat(counter).as("Phrase2 pour " + dep)
-						.allSatisfy(value -> assertThat(value).isLessThan(3));
+						.allSatisfy(value -> assertThat(value).isLessThan(4));
 				counter = getCounterOfEachVariable(dep, variable46);
 				softly.assertThat(counter).as("Variable46 pour " + dep)
-						.allSatisfy(value -> assertThat(value).isLessThan(3));
+						.allSatisfy(value -> assertThat(value).isLessThan(5));
 			}
 		}
 		softly.assertAll();

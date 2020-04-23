@@ -19,14 +19,38 @@ import urgence_medecin.selenium.test.UM_27;
 import urgence_medecin.selenium.test.UM_28;
 import urgence_medecin.selenium.test.UM_29;
 import urgence_medecin.selenium.test.UM_3;
+import urgence_medecin.selenium.test.UM_30;
+import urgence_medecin.selenium.test.UM_31;
 import urgence_medecin.selenium.test.UM_32;
+import urgence_medecin.selenium.test.UM_33;
+import urgence_medecin.selenium.test.UM_34;
 import urgence_medecin.selenium.test.UM_4;
 import urgence_medecin.selenium.test.UM_5;
 import urgence_medecin.selenium.test.UM_9;
 
 @RunWith(Suite.class)
-@Suite.SuiteClasses({ UM_1.class, UM_2.class, UM_4.class, UM_3.class, UM_5.class, UM_9.class, UM_10.class, UM_11.class,
-		UM_21.class, UM_27.class, UM_28.class, UM_29.class, UM_32.class, UM_26.class })
+// @formatter:off
+@Suite.SuiteClasses({ 
+	UM_1.class, 
+	UM_2.class, 
+	UM_4.class, 
+	UM_3.class, 
+	UM_5.class, 
+	UM_9.class, 
+	UM_10.class, 
+	UM_11.class,
+	UM_21.class, 
+	UM_27.class, 
+	UM_28.class, 
+	UM_29.class, 
+	UM_30.class, 
+	UM_31.class, 
+	UM_32.class, 
+	UM_34.class,
+	UM_26.class,
+	UM_33.class
+	})
+//@formatter:on
 public class TestSuiteSelenium {
 
 	protected static WebDriver webDriver;

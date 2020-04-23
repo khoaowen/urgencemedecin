@@ -44,4 +44,14 @@ public class Region {
 		webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> d.findElements(By.xpath(xpathExpression)));
 		return chromeDriver.findElement(By.xpath(xpathExpression)).getAttribute("alt");
 	}
+
+	public List<String> getMedecinParDepartementsHyperLink(String attribute) {
+		WebDriver chromeDriver = DriverManager.getChromeDriver();
+		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
+		String xpathExpression = "//div[contains(@class,'et_pb_text_9')]//td/a";
+		webDriverWait.withTimeout(Duration.ofSeconds(10))
+				.until(d -> chromeDriver.findElements(By.xpath(xpathExpression)));
+		return chromeDriver.findElements(By.xpath(xpathExpression)).stream().map(e -> e.getAttribute(attribute))
+				.collect(Collectors.toList());
+	}
 }

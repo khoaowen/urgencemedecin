@@ -55,4 +55,12 @@ public class Ville {
 		return bd.toString();
 	}
 
+	public String getLogoVilleImg(String attribute) {
+		WebDriver chromeDriver = DriverManager.getChromeDriver();
+		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
+		String xpathExpression = "//div[contains(@class,\"et_pb_text_4\")]//img[contains(@class,\"wp-image-696\")]";
+		webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> d.findElements(By.xpath(xpathExpression)));
+		return chromeDriver.findElement(By.xpath(xpathExpression)).getAttribute(attribute);
+	}
+
 }

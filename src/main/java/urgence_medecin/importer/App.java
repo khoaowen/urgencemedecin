@@ -7,7 +7,6 @@ import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,7 +41,7 @@ public class App {
 
 	private static void generateUpdateStatements(ExcelReader reader) throws IOException, URISyntaxException {
 		final List<Long> postIds = parsePostIds("list_of_villes_principales_de_departement.txt");
-		postIds.sort(Comparator.naturalOrder());
+//		postIds.sort(Comparator.naturalOrder());
 		final List<String> variablesToRead = LongStream.rangeClosed(1, 46).mapToObj(i -> "variable" + i)
 				.collect(Collectors.toList());
 		StringBuilder bd = new StringBuilder();
@@ -58,15 +57,15 @@ public class App {
 
 	private static void generateInsertStatements(final ExcelReader reader) throws IOException, URISyntaxException {
 //		final List<Long> postIds = LongStream.rangeClosed(6550, 43291).boxed().collect(Collectors.toList());
-		final List<Long> postIds = parsePostIds("list_of_regions.txt");
-		final long firstMetaId = 2357460;
+		final List<Long> postIds = parsePostIds("list_of_villes.txt");
+		final long firstMetaId = 2359535;
 		List<String> variablesToRead = IntStream.rangeClosed(1, 5).mapToObj(i -> "variable" + i)
 				.collect(Collectors.toList());
 		Long metaId = firstMetaId;
 		StringBuilder bd = new StringBuilder();
 		for (String var : variablesToRead) {
-			List<String> valuesOfHeader = reader.getValuesOfHeader("ALT REGION", var);
-			Pair<String, Long> generateStatements = MetaDatasUpdater.insertStatements(metaId, var, postIds,
+			List<String> valuesOfHeader = reader.getValuesOfHeader("ALT VILLLE", var);
+			Pair<String, Long> generateStatements = MetaDatasUpdater.insertStatements(metaId, "logo_" + var, postIds,
 					valuesOfHeader);
 			bd.append(generateStatements.getKey());
 			metaId = generateStatements.getValue();
