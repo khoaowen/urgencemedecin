@@ -80,12 +80,12 @@ public class Departement {
 				.collect(Collectors.toList());
 	}
 
-	public String getAltLogoDepartement() {
+	public String getAltLogoDepartement(String attribute) {
 		WebDriver chromeDriver = DriverManager.getChromeDriver();
 		WebDriverWait webDriverWait = DriverManager.getWebDriverWait();
 		String xpathExpression = "//div[contains(@class,\"et_pb_text_5\")]//img[contains(@class,\"wp-image-696\")]";
 		webDriverWait.withTimeout(Duration.ofSeconds(10)).until(d -> d.findElements(By.xpath(xpathExpression)));
-		return chromeDriver.findElement(By.xpath(xpathExpression)).getAttribute("alt");
+		return chromeDriver.findElement(By.xpath(xpathExpression)).getAttribute(attribute);
 	}
 
 	public String getAllDescriptionTextsInPage() {
