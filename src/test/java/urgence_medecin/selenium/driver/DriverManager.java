@@ -11,10 +11,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class DriverManager {
-	private static WebDriver driver = null;
-	private static WebDriver mobileDriver = null;
-	private static WebDriverWait driverWait = null;
-	private static WebDriverWait mobileDriverWait = null;
+	private static ThreadLocal<WebDriver> driver = null;
+	private static ThreadLocal<WebDriver> mobileDriver = null;
+	private static ThreadLocal<WebDriverWait> driverWait = null;
+	private static ThreadLocal<WebDriverWait> mobileDriverWait = null;
 
 	private DriverManager() {
 	}
@@ -23,6 +23,7 @@ public class DriverManager {
 		if (driver == null) {
 			WebDriverManager.chromedriver().setup();
 			ChromeOptions options = new ChromeOptions();
+			options.addArguments("incognito");
 			options.addArguments("start-maximized");
 			options.addArguments("enable-automation");
 			options.addArguments("--no-sandbox");
@@ -30,9 +31,14 @@ public class DriverManager {
 			options.addArguments("--disable-dev-shm-usage");
 			options.addArguments("--disable-browser-side-navigation");
 			options.addArguments("--disable-gpu");
-			driver = new ChromeDriver(options);
+			driver = new ThreadLocal<WebDriver>() {
+				@Override
+				protected WebDriver initialValue() {
+					return new ChromeDriver(options);
+				}
+			};
 		}
-		return driver;
+		return driver.get();
 	}
 
 	public static WebDriver getChromeMobileDriver() {
@@ -41,25 +47,41 @@ public class DriverManager {
 			mobileEmulation.put("deviceName", "Nexus 5");
 			WebDriverManager.chromedriver().setup();
 			ChromeOptions chromeOptions = new ChromeOptions();
+			chromeOptions.addArguments("incognito");
 			chromeOptions.setExperimentalOption("mobileEmulation", mobileEmulation);
-			mobileDriver = new ChromeDriver(chromeOptions);
+			mobileDriver = new ThreadLocal<WebDriver>() {
+				@Override
+				protected WebDriver initialValue() {
+					return new ChromeDriver(chromeOptions);
+				}
+			};
 		}
-		return mobileDriver;
+		return mobileDriver.get();
 
 	}
 
 	public static WebDriverWait getWebDriverWait() {
 		if (driverWait == null) {
-			driverWait = new WebDriverWait(getChromeDriver(), 10);
+			driverWait = new ThreadLocal<WebDriverWait>() {
+				@Override
+				protected WebDriverWait initialValue() {
+					return new WebDriverWait(getChromeDriver(), 10);
+				}
+			};
 		}
-		return driverWait;
+		return driverWait.get();
 	}
 
 	public static WebDriverWait getWebMobileDriverWait() {
 		if (mobileDriverWait == null) {
-			mobileDriverWait = new WebDriverWait(getChromeMobileDriver(), 10);
+			mobileDriverWait = new ThreadLocal<WebDriverWait>() {
+				@Override
+				protected WebDriverWait initialValue() {
+					return new WebDriverWait(getChromeMobileDriver(), 10);
+				}
+			};
 		}
-		return mobileDriverWait;
+		return mobileDriverWait.get();
 	}
 
 }

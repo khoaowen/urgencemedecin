@@ -4,6 +4,7 @@ import java.time.Duration;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import urgence_medecin.selenium.driver.DriverManager;
@@ -34,13 +35,22 @@ public class CommonPageHelper {
 		return chromeDriver.findElement(By.xpath(xpathTitle)).getAttribute("href");
 	}
 
-	public static String getBlocAppelInMobileMode() {
+	public static String getBlocAppelInMobileMode(String attribute) {
+		WebDriverWait webMobileDriverWait = DriverManager.getWebMobileDriverWait();
+		String xpathTitle = "//div[@id=\"blocappel\"]//a[@href=\"tel:118018\"]";
+		webMobileDriverWait.withTimeout(Duration.ofSeconds(10)).until(e -> {
+			return e.findElement(By.xpath(xpathTitle));
+		});
+		return CommonPageHelper.getBlocAppelElementInMobileMode().getAttribute(attribute);
+	}
+
+	public static WebElement getBlocAppelElementInMobileMode() {
 		WebDriver chromeMobileDriver = DriverManager.getChromeMobileDriver();
 		WebDriverWait webMobileDriverWait = DriverManager.getWebMobileDriverWait();
 		String xpathTitle = "//div[@id=\"blocappel\"]//a[@href=\"tel:118018\"]";
 		webMobileDriverWait.withTimeout(Duration.ofSeconds(10)).until(e -> {
 			return e.findElement(By.xpath(xpathTitle));
 		});
-		return chromeMobileDriver.findElement(By.xpath(xpathTitle)).getAttribute("innerText");
+		return chromeMobileDriver.findElement(By.xpath(xpathTitle));
 	}
 }
