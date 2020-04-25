@@ -23,7 +23,7 @@ public class UM_31 {
 				"https://www.urgence-medecin-garde.fr/bourgogne-franche-comte/saone-et-loire-71/saint-eugene-71190/");
 		Ville ville = Ville.getPage();
 		assertThat(ville.getLogoVilleImg("alt")).isEqualTo(
-				"Trouver le médecin de garde à SAINT-EUGENE (17520) 24H sur 24 7 jours sur 7 un dimanche, pendant le week-end, un jour férié le soir et la nuit.");
+				"Trouver votre médecin de garde à SAINT-EUGENE (71190) 24H sur 24 7 jours sur 7 un dimanche, pendant le week-end, un jour férié le soir et la nuit.");
 	}
 
 }
