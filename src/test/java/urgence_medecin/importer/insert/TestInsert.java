@@ -1,21 +1,20 @@
 package urgence_medecin.importer.insert;
 
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.util.Arrays;
-import java.util.List;
-
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import javafx.util.Pair;
 import urgence_medecin.importer.AppTestSuite;
 import urgence_medecin.importer.ExcelReader;
 import urgence_medecin.importer.MetaDatasUpdater;
+import urgence_medecin.importer.Pair;
+
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Unit test for simple App.

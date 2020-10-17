@@ -1,5 +1,8 @@
 package urgence_medecin.importer;
 
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
@@ -14,10 +17,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.LongStream;
 
-import org.apache.poi.EncryptedDocumentException;
-import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
-
-import javafx.util.Pair;
 
 public class App {
 

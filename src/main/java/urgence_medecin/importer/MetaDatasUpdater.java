@@ -1,8 +1,7 @@
 package urgence_medecin.importer;
 
-import java.util.List;
 
-import javafx.util.Pair;
+import java.util.List;
 
 /**
  * This class generates the SQL statements for updating a list of Post Ids
